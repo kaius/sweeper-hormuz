@@ -1,0 +1,283 @@
+/* ============================================================
+   sweeper-hormuz — Persian Gulf Minesweeper
+   Dark nautical theme
+   ============================================================ */
+
+:root {
+  --cell-size: 30px;
+  --water-unrevealed: #1a6b9e;
+  --water-hover: #2585c4;
+  --water-revealed: #a8d8ea;
+  --water-empty: #c8eaf7;
+  --land: #c2a060;
+  --land-border: #a08040;
+  --flag-color: #e63946;
+  --mine-bg: #8b0000;
+  --mine-clicked: #ff2222;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #0d1b2a;
+  color: #d0dde8;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ---- Header ---- */
+#game-header {
+  width: 100%;
+  background: linear-gradient(135deg, #0d2137 0%, #1a3a5c 100%);
+  padding: 0.8rem 1.2rem;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+}
+
+h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.7rem;
+  color: #7ecef4;
+  letter-spacing: 0.05em;
+}
+
+#controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 1rem;
+}
+
+#difficulty {
+  background: #0d2137;
+  color: #d0dde8;
+  border: 1px solid #2a5a8c;
+  border-radius: 4px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+#mine-count,
+#timer {
+  background: #0a1929;
+  border: 1px solid #2a5a8c;
+  border-radius: 4px;
+  padding: 0.3rem 0.7rem;
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  min-width: 5rem;
+  text-align: center;
+}
+
+#new-game {
+  background: #e63946;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.4rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+#new-game:hover { background: #c1121f; }
+#new-game:active { background: #9a0f19; }
+
+#status-message {
+  min-height: 1.6rem;
+  margin-top: 0.4rem;
+  font-size: 1.15rem;
+  font-weight: bold;
+  color: #7ecef4;
+}
+#status-message.win  { color: #4caf50; }
+#status-message.lose { color: #e63946; }
+
+/* ---- Map labels ---- */
+#map-labels {
+  display: flex;
+  justify-content: space-between;
+  width: fit-content;
+  min-width: calc(40 * var(--cell-size));
+  padding: 0.3rem 0;
+  font-size: 0.75rem;
+  color: #6a8fa8;
+  letter-spacing: 0.03em;
+}
+
+/* ---- Grid container ---- */
+#game-area {
+  padding: 0.8rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#grid-container {
+  overflow-x: auto;
+}
+
+#grid {
+  display: grid;
+  grid-template-columns: repeat(40, var(--cell-size));
+  grid-template-rows: repeat(15, var(--cell-size));
+  gap: 1px;
+  background: #071018;
+  border: 2px solid #2a5a8c;
+  width: fit-content;
+}
+
+/* ---- Cell base ---- */
+.cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: bold;
+  position: relative;
+  user-select: none;
+  overflow: hidden;
+}
+
+/* ---- Land cells ---- */
+.cell.land {
+  background: var(--land);
+  border: 1px solid var(--land-border);
+  cursor: default;
+}
+.cell.land::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 4px,
+    rgba(0,0,0,0.06) 4px,
+    rgba(0,0,0,0.06) 5px
+  );
+  pointer-events: none;
+}
+
+/* ---- Water cells — unrevealed ---- */
+.cell.water {
+  background: var(--water-unrevealed);
+  border: 1px solid #155480;
+  cursor: pointer;
+  transition: background 0.08s;
+}
+.cell.water:hover {
+  background: var(--water-hover);
+}
+
+/* ---- Flagged ---- */
+.cell.water.flagged {
+  background: #0d3a5c;
+  color: var(--flag-color);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* ---- Revealed ---- */
+.cell.water.revealed {
+  background: var(--water-revealed);
+  border: 1px solid #8bbdd6;
+  cursor: default;
+}
+.cell.water.revealed.empty {
+  background: var(--water-empty);
+}
+
+/* Number colors (classic Minesweeper palette) */
+.cell[data-number="1"] { color: #0000cc; }
+.cell[data-number="2"] { color: #007700; }
+.cell[data-number="3"] { color: #cc0000; }
+.cell[data-number="4"] { color: #000088; }
+.cell[data-number="5"] { color: #880000; }
+.cell[data-number="6"] { color: #007777; }
+.cell[data-number="7"] { color: #111111; }
+.cell[data-number="8"] { color: #555555; }
+
+/* ---- Mine revealed (lose state) ---- */
+.cell.water.mine-revealed {
+  background: var(--mine-bg);
+  color: #fff;
+  font-size: 14px;
+  cursor: default;
+}
+/* The mine the player actually clicked */
+.cell.water.mine-clicked {
+  background: var(--mine-clicked);
+  color: #fff;
+}
+
+/* ---- Wrong flag (lose state) ---- */
+.cell.water.wrong-flag {
+  background: #5a1a1a;
+  color: #ff8888;
+  font-size: 13px;
+}
+
+/* ---- Game over: disable hover on unrevealed water ---- */
+.game-over .cell.water:not(.revealed):not(.flagged):not(.mine-revealed):not(.mine-clicked) {
+  cursor: default;
+}
+.game-over .cell.water:hover {
+  background: var(--water-unrevealed);
+}
+.game-over .cell.water.flagged:hover {
+  background: #0d3a5c;
+}
+
+/* ---- Footer ---- */
+#game-footer {
+  padding: 0.5rem 1rem 1rem;
+  text-align: center;
+  color: #6a8fa8;
+  font-size: 0.8rem;
+}
+#game-footer p {
+  margin: 0 0 0.3rem;
+}
+#legend {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.legend-water { color: #7ecef4; }
+.legend-land  { color: #c2a060; }
+.legend-flag  { color: #e63946; }
+.legend-mine  { color: #ff8888; }
+
+/* ---- Responsive scaling ---- */
+@media (max-width: 1320px) {
+  :root { --cell-size: 24px; }
+  .cell { font-size: 11px; }
+  .cell.water.flagged,
+  .cell.water.mine-revealed { font-size: 12px; }
+}
+@media (max-width: 1060px) {
+  :root { --cell-size: 20px; }
+  .cell { font-size: 9px; }
+  .cell.water.flagged,
+  .cell.water.mine-revealed { font-size: 10px; }
+  h1 { font-size: 1.3rem; }
+}
+@media (max-width: 880px) {
+  :root { --cell-size: 16px; }
+  .cell { font-size: 8px; }
+  h1 { font-size: 1.1rem; }
+  #controls { gap: 0.5rem; font-size: 0.85rem; }
+}
