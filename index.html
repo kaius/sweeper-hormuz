@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sweeper Hormuz</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header id="game-header">
+      <h1>&#9875; Sweeper Hormuz</h1>
+      <div id="controls">
+        <select id="difficulty" title="Difficulty">
+          <option value="30">Easy — 30 mines</option>
+          <option value="60" selected>Medium — 60 mines</option>
+          <option value="90">Hard — 90 mines</option>
+        </select>
+        <div id="mine-count">&#128163; <span id="mines-remaining">60</span></div>
+        <button id="new-game">New Game</button>
+        <div id="timer">&#9201; <span id="time-display">0:00</span></div>
+      </div>
+      <div id="status-message"></div>
+    </header>
+
+    <main id="game-area">
+      <div id="map-labels">
+        <span class="label-west">&#8592; Kuwait / Iraq</span>
+        <span class="label-east">Strait of Hormuz &#8594;</span>
+      </div>
+      <div id="grid-container">
+        <div id="grid"></div>
+      </div>
+    </main>
+
+    <footer id="game-footer">
+      <p>Left-click to reveal &nbsp;|&nbsp; Right-click to place mine marker</p>
+      <div id="legend">
+        <span class="legend-water">&#9632; Water (playable)</span>
+        <span class="legend-land">&#9632; Land</span>
+        <span class="legend-flag">&#9873; Mine Marker</span>
+        <span class="legend-mine">&#128163; Naval Mine</span>
+      </div>
+    </footer>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>
