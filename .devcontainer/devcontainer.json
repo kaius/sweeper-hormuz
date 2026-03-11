@@ -1,0 +1,12 @@
+{
+  "name": "sweeper-hormuz",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "forwardPorts": [8080],
+  "postStartCommand": "python3 -m http.server 8080 --directory /workspaces/sweeper-hormuz",
+  "portsAttributes": {
+    "8080": {
+      "label": "Game Server",
+      "onAutoForward": "openBrowser"
+    }
+  }
+}
